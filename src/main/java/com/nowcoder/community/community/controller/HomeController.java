@@ -39,6 +39,6 @@ public class HomeController {
             }
         }
         model.addAttribute("discussPosts",discussPosts);
-        return page.getPath();
+        return "/index";
     }
 }
