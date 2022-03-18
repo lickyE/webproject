@@ -187,4 +187,8 @@ public class UserService implements CommunityConstent {
         userMapper.updatePassword(user.getId(),newPassword1);
         return map;
     }
+
+    public User findUserByName(String username){
+        return userMapper.selectByName(username);
+    }
 }

@@ -4,7 +4,9 @@ import com.nowcoder.community.community.dao.DiscussPostMapper;
 import com.nowcoder.community.community.entity.DiscussPost;
 import com.nowcoder.community.community.entity.Page;
 import com.nowcoder.community.community.service.DiscussPostService;
+import com.nowcoder.community.community.service.LikeService;
 import com.nowcoder.community.community.service.UserService;
+import com.nowcoder.community.community.util.CommunityConstent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstent {
     @Autowired
     private DiscussPostService discussPostService;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(path = "/index",method = RequestMethod.GET)
     public String getIndexPage(Model model,Page page){
@@ -35,6 +40,9 @@ public class HomeController {
                 Map<String,Object> temp = new HashMap<>();
                 temp.put("post",i);
                 temp.put("user",userService.findUserById(i.getUserId()));
+
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST,i.getId());
+                temp.put("likeCount",likeCount);
                 discussPosts.add(temp);
             }
         }

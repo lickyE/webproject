@@ -2,9 +2,11 @@ package com.nowcoder.community.community;
 
 import com.nowcoder.community.community.dao.DiscussPostMapper;
 import com.nowcoder.community.community.dao.LoginTicketMapper;
+import com.nowcoder.community.community.dao.MessageMapper;
 import com.nowcoder.community.community.dao.UserMapper;
 import com.nowcoder.community.community.entity.DiscussPost;
 import com.nowcoder.community.community.entity.LoginTicket;
+import com.nowcoder.community.community.entity.Message;
 import com.nowcoder.community.community.entity.User;
 
 import org.junit.Test;
@@ -85,6 +87,31 @@ public class MapperTests {
         LoginTicket loginTicket = loginTicketMapper.selectByTicket("abc");
         System.out.println(loginTicket);
         loginTicketMapper.updateStatus("abc",0);
+    }
+
+    @Autowired
+    private MessageMapper messageMapper;
+    @Test
+    public void testSelectLetters(){
+        List<Message> list = messageMapper.selectConversations(111,0,20);
+        for(Message m : list){
+            System.out.println(m);
+        }
+
+        int count = messageMapper.selectConversationCount(111);
+        System.out.println(count);
+
+        list = messageMapper.selectLetters("111_112",0,10);
+        for(Message m : list){
+            System.out.println(m);
+        }
+
+        count = messageMapper.selectLetterCount("111_112");
+        System.out.println(count);
+
+        count = messageMapper.selectLetterUnreadCount(131,"111_131");
+        System.out.println(count);
+
     }
 
 }
