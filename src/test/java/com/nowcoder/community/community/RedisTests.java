@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
@@ -87,4 +88,32 @@ public class RedisTests {
         });
         System.out.println(obj);
     }
+
+    @Test
+    public void DivisibleSubset() {
+        int[] nums = {6,8,-2,-5,2};
+        int k1 = 3;
+        int k2 = 4;
+        int len = nums.length;
+        int[] dp = new int[len];
+        Arrays.fill(dp, 0);
+        int maxSize = 0;
+        int maxVal = dp[0];
+        for (int i = 0; i < len; i++) {
+            for (int j = len - 1; j >= i; j--) {
+                dp[j] = Math.max(dp[j], dp[j - i] + nums[i]);
+                if (dp[j] % k1 == 0 && dp[j] % k2 != 0) {
+                    if(maxVal < dp[j]){
+                        maxVal = dp[j];
+                        maxSize = 0;
+                    }else if(maxVal == dp[j]){
+                        maxSize ++;
+                    }
+                }
+            }
+        }
+        System.out.println(maxSize);
+        System.out.println(maxVal);
+    }
+
 }
