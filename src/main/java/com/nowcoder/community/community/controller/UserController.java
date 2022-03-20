@@ -2,8 +2,10 @@ package com.nowcoder.community.community.controller;
 
 import com.nowcoder.community.community.annotation.LoginRequired;
 import com.nowcoder.community.community.entity.User;
+import com.nowcoder.community.community.service.FollweService;
 import com.nowcoder.community.community.service.LikeService;
 import com.nowcoder.community.community.service.UserService;
+import com.nowcoder.community.community.util.CommunityConstent;
 import com.nowcoder.community.community.util.Communityutil;
 import com.nowcoder.community.community.util.HostHolder;
 import org.apache.catalina.Host;
@@ -29,7 +31,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements CommunityConstent {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -50,6 +52,9 @@ public class UserController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private FollweService follweService;
 
     @LoginRequired
     @RequestMapping(path = "/setting",method = RequestMethod.GET)
@@ -137,10 +142,23 @@ public class UserController {
         //用户
         model.addAttribute("user",user);
 
+
         //点赞
         int likeCount = likeService.findUserLikeCount(userId);
         model.addAttribute("likeCount",likeCount);
 
+        //关注数量
+        long followee = follweService.findFolloweeCount(userId,ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount",followee);
+        //粉丝数量
+        long follower = follweService.findFollowerCount(ENTITY_TYPE_USER,userId);
+        model.addAttribute("followerCount",follower);
+        //是否已关注当前用户
+        boolean hasFollowed = false;
+        if(hostHolder.getUser() != null){
+            hasFollowed = follweService.hasFollowed(hostHolder.getUser().getId(),ENTITY_TYPE_USER,userId);
+        }
+        model.addAttribute("hasFollowed",hasFollowed);
         return "/site/profile";
     }
 }
